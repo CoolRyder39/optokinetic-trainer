@@ -243,9 +243,39 @@
     fixationTarget.className = `fixation-target ${state.target}`;
   }
 
+  // --- Screen Wake Lock (prevents phone/tablet from dimming during sessions) ---
+  let wakeLock = null;
+
+  async function syncWakeLock() {
+    if (!('wakeLock' in navigator)) return;
+    try {
+      if (state.running && document.visibilityState === 'visible') {
+        if (!wakeLock) {
+          wakeLock = await navigator.wakeLock.request('screen');
+          wakeLock.addEventListener('release', () => { wakeLock = null; });
+        }
+      } else if (wakeLock) {
+        await wakeLock.release();
+        wakeLock = null;
+      }
+    } catch (_) {
+      // Ignore if browser/OS rejects wake lock
+    }
+  }
+
+  document.addEventListener('visibilitychange', syncWakeLock);
+
+  // Register Service Worker for offline PWA support
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+
   function updatePauseVisual() {
     playPauseBtn.textContent = state.running ? 'Pause' : 'Play';
     pauseBanner.classList.toggle('hidden', state.running);
+    syncWakeLock();
   }
 
   function formatTime(sec) {

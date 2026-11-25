@@ -10,7 +10,7 @@ A lightweight, GPU-accelerated (WebGL) optokinetic visual stimulus website desig
 - **TV & Keyboard Friendly:** Auto-hiding HUD, Fullscreen (`F`), Pause (`Space`), Flip Direction (`R`), Arrow keys for direction
 
 ## Live URL
-- `https://opk.billig.ca` (hosted via GitHub Pages on `cbillig/optokinetic-trainer`)
+- `https://opk.billig.ca` (hosted via GitHub Pages on `CoolRyder39/optokinetic-trainer`)
 
 ## Local Preview
 Double-click `index.html` to open it directly in Chrome/Edge/Safari, or serve it over local Wi-Fi:
