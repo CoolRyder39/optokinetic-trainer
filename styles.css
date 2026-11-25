@@ -97,6 +97,81 @@ body {
   display: none;
 }
 
+/* Top-Left Count-Up Stopwatch */
+.stopwatch-bar {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 6px 14px;
+  border-radius: 999px;
+  background: rgba(10, 12, 18, 0.78);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.stopwatch-readout {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #f8fafc;
+  min-width: 48px;
+  text-align: center;
+}
+
+.sw-btn {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.sw-btn:active {
+  transform: scale(0.97);
+}
+
+.sw-btn-start {
+  background: #22c55e;
+  color: #052e16;
+}
+
+.sw-btn-start:hover,
+.sw-btn-start:focus-visible {
+  background: #16a34a;
+  color: #ffffff;
+  outline: 2px solid #86efac;
+}
+
+.sw-btn-stop {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.sw-btn-stop:hover,
+.sw-btn-stop:focus-visible {
+  background: #dc2626;
+  outline: 2px solid #fca5a5;
+}
+
+.sw-btn-reset {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--panel-border);
+  color: var(--text);
+}
+
+.sw-btn-reset:hover,
+.sw-btn-reset:focus-visible {
+  background: rgba(255, 255, 255, 0.2);
+  outline: 2px solid var(--accent);
+}
+
 /* Status Badge */
 .status-badge {
   position: fixed;

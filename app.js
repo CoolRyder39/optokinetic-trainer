@@ -15,6 +15,10 @@
   const fullscreenBtn = document.getElementById('fullscreenBtn');
   const hideHudBtn = document.getElementById('hideHudBtn');
 
+  const stopwatchReadout = document.getElementById('stopwatchReadout');
+  const stopwatchStartStopBtn = document.getElementById('stopwatchStartStopBtn');
+  const stopwatchResetBtn = document.getElementById('stopwatchResetBtn');
+
   const patternSelect = document.getElementById('patternSelect');
   const directionSelect = document.getElementById('directionSelect');
   const speedRange = document.getElementById('speedRange');
@@ -58,6 +62,8 @@
     target: 'red-dot',
     timerDuration: 0,
     timerRemaining: 0,
+    stopwatchRunning: false,
+    stopwatchElapsed: 0,
     phase: 0,
     elapsed: 0,
     hudHidden: false,
@@ -373,6 +379,43 @@
   controlPanel.addEventListener('mouseenter', () => clearTimeout(idleTimer));
   controlPanel.addEventListener('mouseleave', scheduleAutoHide);
 
+  function formatStopwatch(sec) {
+    const total = Math.floor(Math.max(0, sec));
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    if (h > 0) {
+      return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
+
+  function updateStopwatchUI() {
+    stopwatchReadout.textContent = formatStopwatch(state.stopwatchElapsed);
+    if (state.stopwatchRunning) {
+      stopwatchStartStopBtn.textContent = 'Stop';
+      stopwatchStartStopBtn.classList.remove('sw-btn-start');
+      stopwatchStartStopBtn.classList.add('sw-btn-stop');
+    } else {
+      stopwatchStartStopBtn.textContent = state.stopwatchElapsed > 0 ? 'Resume' : 'Start Timer';
+      stopwatchStartStopBtn.classList.remove('sw-btn-stop');
+      stopwatchStartStopBtn.classList.add('sw-btn-start');
+    }
+  }
+
+  stopwatchStartStopBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    state.stopwatchRunning = !state.stopwatchRunning;
+    updateStopwatchUI();
+  });
+
+  stopwatchResetBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    state.stopwatchRunning = false;
+    state.stopwatchElapsed = 0;
+    updateStopwatchUI();
+  });
+
   // --- Event Listeners ---
   playPauseBtn.addEventListener('click', () => {
     state.running = !state.running;
@@ -570,6 +613,11 @@
       fpsReadout.textContent = `${measured} FPS`;
       fpsFrames = 0;
       fpsLastCheck = now;
+    }
+
+    if (state.stopwatchRunning) {
+      state.stopwatchElapsed += dt;
+      stopwatchReadout.textContent = formatStopwatch(state.stopwatchElapsed);
     }
 
     if (state.running) {
