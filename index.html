@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Optokinetic Trainer — High-FPS Visual & Vestibular Stimulus</title>
+  <meta name="description" content="Smooth 60fps/120fps/144fps+ optokinetic visual training web app for vertical distortion, moving stripes, and gaze stabilization exercises." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <canvas id="glCanvas" aria-label="Optokinetic visual stimulus"></canvas>
+
+  <!-- Central Fixation Target -->
+  <div id="fixationTarget" class="fixation-target" aria-hidden="true"></div>
+
+  <!-- Live FPS & Timer HUD -->
+  <div id="statusBadge" class="status-badge" aria-live="polite">
+    <span id="fpsReadout">-- FPS</span>
+    <span id="timerReadout" class="timer-readout hidden">00:00</span>
+  </div>
+
+  <!-- Pause Overlay Hint -->
+  <div id="pauseBanner" class="pause-banner hidden">
+    <span>PAUSED</span>
+    <small>Press Space / Play to resume</small>
+  </div>
+
+  <!-- Floating Re-open Button when HUD is hidden -->
+  <button id="showHudBtn" class="show-hud-btn hidden" type="button" title="Show Controls (H)">
+    Controls
+  </button>
+
+  <!-- Control Panel -->
+  <aside id="controlPanel" class="control-panel" aria-label="Optokinetic Controls">
+    <div class="panel-header">
+      <div class="brand">
+        <h1>Optokinetic Trainer</h1>
+        <span class="subtitle">Native Refresh Rate Stimulus</span>
+      </div>
+      <div class="header-actions">
+        <button id="playPauseBtn" class="btn btn-primary" type="button" title="Space">Pause</button>
+        <button id="reverseBtn" class="btn" type="button" title="Reverse Direction (R)">Flip</button>
+        <button id="fullscreenBtn" class="btn" type="button" title="Fullscreen (F)">Fullscreen</button>
+        <button id="hideHudBtn" class="btn btn-ghost" type="button" title="Hide Panel (H)">Hide</button>
+      </div>
+    </div>
+
+    <!-- Quick Presets -->
+    <div class="presets-row" role="group" aria-label="Quick Presets">
+      <button class="chip active" data-preset="vertical-up" type="button">Vertical Up</button>
+      <button class="chip" data-preset="vertical-down" type="button">Vertical Down</button>
+      <button class="chip" data-preset="distortion-up" type="button">Distortion Up</button>
+      <button class="chip" data-preset="distortion-down" type="button">Distortion Down</button>
+      <button class="chip" data-preset="horizontal-right" type="button">Horizontal Right</button>
+      <button class="chip" data-preset="checker-up" type="button">Checkerboard Up</button>
+    </div>
+
+    <div class="controls-grid">
+      <label class="control">
+        <span>Pattern</span>
+        <select id="patternSelect">
+          <option value="stripes">Stripes / Distortion</option>
+          <option value="checker">Checkerboard</option>
+          <option value="radial">Radial Tunnel</option>
+        </select>
+      </label>
+
+      <label class="control">
+        <span>Direction</span>
+        <select id="directionSelect">
+          <option value="up">Moving Up</option>
+          <option value="down">Going Down</option>
+          <option value="right">Left to Right</option>
+          <option value="left">Right to Left</option>
+        </select>
+      </label>
+
+      <label class="control">
+        <span>Speed <strong id="speedVal">1.8</strong></span>
+        <input id="speedRange" type="range" min="0.1" max="8.0" step="0.1" value="1.8" />
+      </label>
+
+      <label class="control">
+        <span>Stripe Density <strong id="densityVal">10</strong></span>
+        <input id="densityRange" type="range" min="3" max="32" step="1" value="10" />
+      </label>
+
+      <label class="control">
+        <span>Distortion / Warp <strong id="distortionVal">0%</strong></span>
+        <input id="distortionRange" type="range" min="0" max="100" step="1" value="0" />
+      </label>
+
+      <label class="control">
+        <span>Color Theme</span>
+        <select id="themeSelect">
+          <option value="bw">Black &amp; White</option>
+          <option value="soft">Soft Gray (Low Contrast)</option>
+          <option value="rw">Red &amp; White</option>
+          <option value="by">Blue &amp; White</option>
+          <option value="amber">Dark Amber</option>
+        </select>
+      </label>
+
+      <label class="control">
+        <span>Center Target</span>
+        <select id="targetSelect">
+          <option value="red-dot">Red Dot</option>
+          <option value="green-dot">Green Dot</option>
+          <option value="crosshair">Crosshair</option>
+          <option value="off">Off</option>
+        </select>
+      </label>
+
+      <label class="control">
+        <span>Session Timer</span>
+        <select id="timerSelect">
+          <option value="0">Continuous</option>
+          <option value="30">30 seconds</option>
+          <option value="60">1 minute</option>
+          <option value="120">2 minutes</option>
+          <option value="180">3 minutes</option>
+          <option value="300">5 minutes</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="panel-footer">
+      <div class="shortcuts">
+        <span><kbd>Space</kbd> Pause</span>
+        <span><kbd>R</kbd> Flip</span>
+        <span><kbd>F</kbd> Fullscreen</span>
+        <span><kbd>H</kbd> Hide UI</span>
+        <span><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> Direction</span>
+      </div>
+      <div class="toggles">
+        <label class="inline-check">
+          <input id="autoHideCheck" type="checkbox" checked />
+          Auto-hide UI
+        </label>
+        <label class="inline-check">
+          <input id="showFpsCheck" type="checkbox" checked />
+          Show FPS
+        </label>
+      </div>
+    </div>
+
+    <p class="safety-note">
+      Note: Optokinetic stimuli can provoke dizziness or nausea. Start slowly and pause immediately if symptoms become uncomfortable.
+    </p>
+  </aside>
+
+  <script src="app.js"></script>
+</body>
+</html>
