@@ -44,8 +44,8 @@
   };
 
   const PRESETS = {
-    'vertical-up':      { pattern: 'stripes', direction: 'up',    speed: 1.8, density: 10, distortion: 0  },
-    'vertical-down':    { pattern: 'stripes', direction: 'down',  speed: 1.8, density: 10, distortion: 0  },
+    'vertical-up':      { pattern: 'stripes', direction: 'up',    speed: 0.8, density: 7,  distortion: 0,  target: 'off' },
+    'vertical-down':    { pattern: 'stripes', direction: 'down',  speed: 0.5, density: 7,  distortion: 0,  target: 'off' },
     'distortion-up':    { pattern: 'stripes', direction: 'up',    speed: 1.6, density: 11, distortion: 45 },
     'distortion-down':  { pattern: 'stripes', direction: 'down',  speed: 1.6, density: 11, distortion: 45 },
     'horizontal-right': { pattern: 'stripes', direction: 'right', speed: 1.8, density: 12, distortion: 0  },
@@ -56,11 +56,11 @@
     running: false,
     pattern: 'stripes',
     direction: 'up',
-    speed: 1.8,
-    density: 10,
+    speed: 0.8,
+    density: 7,
     distortion: 0,
     theme: 'bw',
-    target: 'red-dot',
+    target: 'off',
     timerDuration: 0,
     timerRemaining: 0,
     stopwatchRunning: false,
@@ -339,6 +339,7 @@
     state.speed = p.speed;
     state.density = p.density;
     state.distortion = p.distortion;
+    if (p.target !== undefined) state.target = p.target;
     presetButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.preset === key));
     syncControlsFromState();
   }
