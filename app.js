@@ -53,7 +53,7 @@
   };
 
   const state = {
-    running: true,
+    running: false,
     pattern: 'stripes',
     direction: 'up',
     speed: 1.8,
@@ -339,7 +339,6 @@
     state.speed = p.speed;
     state.density = p.density;
     state.distortion = p.distortion;
-    state.running = true;
     presetButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.preset === key));
     syncControlsFromState();
   }

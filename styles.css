@@ -232,7 +232,7 @@ body {
 /* Pause Banner */
 .pause-banner {
   position: fixed;
-  top: 50%;
+  top: 62%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 12;
@@ -507,5 +507,38 @@ body.cursor-hidden {
   }
   .shortcuts {
     display: none;
+  }
+}
+
+/* Drop Pause/Start button onto second row on narrow bar phones */
+@media (max-width: 680px) {
+  .motion-bar {
+    top: 64px;
+  }
+}
+
+@media (max-width: 420px) {
+  .stopwatch-bar {
+    top: 12px;
+    left: 10px;
+    gap: 5px;
+    padding: 5px 6px 5px 10px;
+  }
+  .stopwatch-readout {
+    font-size: 13px;
+    min-width: 42px;
+  }
+  .sw-btn {
+    padding: 4px 9px;
+    font-size: 11px;
+  }
+  .status-badge {
+    top: 12px;
+    right: 10px;
+    padding: 5px 9px;
+    font-size: 11px;
+  }
+  .motion-bar {
+    top: 56px;
   }
 }

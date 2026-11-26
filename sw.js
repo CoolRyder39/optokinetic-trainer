@@ -1,4 +1,4 @@
-const CACHE_NAME = 'opk-trainer-v3';
+const CACHE_NAME = 'opk-trainer-v4';
 const ASSETS = [
   './',
   './index.html',
