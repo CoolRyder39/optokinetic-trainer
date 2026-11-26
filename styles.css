@@ -172,6 +172,36 @@ body {
   outline: 2px solid var(--accent);
 }
 
+/* Top-Middle Movement Control */
+.motion-bar {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(10, 12, 18, 0.78);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.sw-btn-pause {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--panel-border);
+  color: #f8fafc;
+  min-width: 78px;
+}
+
+.sw-btn-pause:hover,
+.sw-btn-pause:focus-visible {
+  background: rgba(255, 255, 255, 0.24);
+  outline: 2px solid var(--accent);
+}
+
 /* Status Badge */
 .status-badge {
   position: fixed;

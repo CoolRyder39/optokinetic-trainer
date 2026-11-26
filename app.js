@@ -18,6 +18,7 @@
   const stopwatchReadout = document.getElementById('stopwatchReadout');
   const stopwatchStartStopBtn = document.getElementById('stopwatchStartStopBtn');
   const stopwatchResetBtn = document.getElementById('stopwatchResetBtn');
+  const topPlayPauseBtn = document.getElementById('topPlayPauseBtn');
 
   const patternSelect = document.getElementById('patternSelect');
   const directionSelect = document.getElementById('directionSelect');
@@ -280,6 +281,9 @@
 
   function updatePauseVisual() {
     playPauseBtn.textContent = state.running ? 'Pause' : 'Play';
+    topPlayPauseBtn.textContent = state.running ? 'Pause' : 'Start';
+    topPlayPauseBtn.classList.toggle('sw-btn-pause', state.running);
+    topPlayPauseBtn.classList.toggle('sw-btn-start', !state.running);
     pauseBanner.classList.toggle('hidden', state.running);
     syncWakeLock();
   }
@@ -367,7 +371,10 @@
     }, 3500);
   }
 
-  function wakeHud() {
+  function wakeHud(e) {
+    if (e && e.target && e.target.closest && e.target.closest('#stopwatchBar, #motionBar, #showHudBtn')) {
+      return;
+    }
     if (state.hudHidden) {
       setHudHidden(false);
     }
@@ -378,6 +385,24 @@
   window.addEventListener('touchstart', wakeHud, { passive: true });
   controlPanel.addEventListener('mouseenter', () => clearTimeout(idleTimer));
   controlPanel.addEventListener('mouseleave', scheduleAutoHide);
+
+  function toggleMovement(affectHud) {
+    state.running = !state.running;
+    if (state.running && state.timerDuration > 0 && state.timerRemaining <= 0) {
+      state.timerRemaining = state.timerDuration;
+    }
+    updatePauseVisual();
+    if (affectHud) {
+      scheduleAutoHide();
+    } else if (state.hudHidden) {
+      document.body.classList.toggle('cursor-hidden', state.running);
+    }
+  }
+
+  topPlayPauseBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleMovement(false);
+  });
 
   function formatStopwatch(sec) {
     const total = Math.floor(Math.max(0, sec));
@@ -418,12 +443,7 @@
 
   // --- Event Listeners ---
   playPauseBtn.addEventListener('click', () => {
-    state.running = !state.running;
-    if (state.running && state.timerDuration > 0 && state.timerRemaining <= 0) {
-      state.timerRemaining = state.timerDuration;
-    }
-    updatePauseVisual();
-    scheduleAutoHide();
+    toggleMovement(true);
   });
 
   reverseBtn.addEventListener('click', flipDirection);
